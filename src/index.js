@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs/promises');
+const cryptoToken = require('./middlewares/token');
 
 const app = express();
 app.use(express.json());
@@ -42,6 +43,11 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // Requisito 3
+
+app.post('/login', (req, res) => {
+  const saveToken = cryptoToken();
+  return res.status(200).json({ token: saveToken });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
