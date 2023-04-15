@@ -10,7 +10,8 @@ const {
     createUser,
     validateTalkPresence,
     validateTalkFormat,
-    validateRate,
+  validateRate,
+
 } = require('./routes/Authorization');
 
 const app = express();
@@ -69,7 +70,25 @@ app.post('/talker', authorizationRouter, invalidToken, tokenName, createUser, va
     writeNote.push(newElement);
      await writeFile(writeNote);
     return res.status(201).json(newElement);
-  });
+});
+  
+// Requisito 6
+app.put('/talker/:id', authorizationRouter, invalidToken, tokenName, createUser,
+  validateTalkPresence, validateTalkFormat, validateRate, async (req, res) => {
+    const writeNote = await fileReader();
+    const { id } = req.params;
+    const findId = writeNote.find((find) => find.id === Number(id));
+    if (!findId) {
+      return res.status(404).json({
+  message: 'Pessoa palestrante não encontrada',
+});
+    }
+    const index = writeNote.indexOf(findId);
+    const newElement = { id: Number(id), ...req.body };
+    writeNote[index] = newElement;
+    await writeFile(writeNote);
+    return res.status(200).json(newElement);
+});
 
 app.listen(PORT, () => {
   console.log('Online');

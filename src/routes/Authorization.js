@@ -118,5 +118,6 @@ module.exports = {
     createUser,
     validateTalkPresence,
     validateTalkFormat,
-    validateRate,
+  validateRate,
+    
 };
