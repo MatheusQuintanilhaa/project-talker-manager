@@ -90,6 +90,17 @@ app.put('/talker/:id', authorizationRouter, invalidToken, tokenName, createUser,
     return res.status(200).json(newElement);
 });
 
+// Requisito 7
+app.delete('/talker/:id', authorizationRouter, invalidToken, async (req, res) => {
+  const writeNote = await fileReader();
+  const { id } = req.params;
+  const findId = writeNote.find((find) => find.id === Number(id));
+  const index = writeNote.indexOf(findId);
+  writeNote.splice(index, 1, '');
+      await writeFile(writeNote);
+  return res.status(204).json(writeNote);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
