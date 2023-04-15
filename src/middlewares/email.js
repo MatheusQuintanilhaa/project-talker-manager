@@ -1,3 +1,4 @@
+// Requisito 4
 module.exports = async function validateEmail(req, res, next) {
     const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     const { email } = req.body;

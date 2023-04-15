@@ -1,3 +1,4 @@
+// Requisito 4
 module.exports = async function validatePassword(req, res, next) {
     const { password } = req.body;
 

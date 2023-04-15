@@ -2,7 +2,16 @@ const express = require('express');
 const fs = require('fs/promises');
 const cryptoToken = require('./middlewares/token');
 const password = require('./middlewares/password');
-const emails = require('./middlewares/email.js');
+const emails = require('./middlewares/email');
+const {
+  authorizationRouter,
+    invalidToken,
+    tokenName,
+    createUser,
+    validateTalkPresence,
+    validateTalkFormat,
+    validateRate,
+} = require('./routes/Authorization');
 
 const app = express();
 app.use(express.json());
@@ -44,14 +53,23 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(200).json(findId);
 });
 
-// Requisito 3
+// Requisito 3 e 4
 
 app.post('/login', emails, password, (req, res) => {
   const saveToken = cryptoToken();
   return res.status(200).json({ token: saveToken });
 });
 
-// Requisito 4
+// Requisito 5
+app.post('/talker', authorizationRouter, invalidToken, tokenName, createUser, validateTalkPresence,
+  validateTalkFormat, validateRate, async (req, res) => {
+    const writeNote = await fileReader();
+    const lastElement = writeNote[writeNote.length - 1].id;
+    const newElement = { id: lastElement + 1, ...req.body };
+    writeNote.push(newElement);
+     await writeFile(writeNote);
+    return res.status(201).json(newElement);
+  });
 
 app.listen(PORT, () => {
   console.log('Online');
